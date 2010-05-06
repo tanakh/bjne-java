@@ -1,7 +1,11 @@
 package jp.tanakh.bjne.ui;
 
+import java.awt.Button;
+import java.awt.Dialog;
 import java.awt.FileDialog;
+import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.Label;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
@@ -89,8 +93,7 @@ public class Main extends Frame {
 
 		setVisible(true);
 		setVisible(false);
-		setSize(256 + getInsets().left + getInsets().right, 240
-				+ getInsets().top + getInsets().bottom);
+		setSize(256 + getInsets().left + getInsets().right, 240 + getInsets().top + getInsets().bottom);
 		setVisible(true);
 
 		loop();
@@ -145,6 +148,40 @@ public class Main extends Frame {
 		System.exit(0);
 	}
 
+	private class AboutDialog extends Dialog {
+		private static final long serialVersionUID = 1L;
+
+		AboutDialog(Frame owner) {
+			super(owner);
+			setLayout(new FlowLayout());
+
+			add(new Label("Beautiful Japanese Nes Emulator for Java"));
+			add(new Label("Version 0.1.0"));
+
+			Button b = new Button("OK");
+			b.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setVisible(false);
+				}
+			});
+			add(b);
+
+			addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosing(WindowEvent e) {
+					setVisible(false);
+				}
+			});
+
+			setTitle("About");
+			setSize(270, 100);
+		}
+	}
+
 	private void onAbout() {
+		Dialog dlg = new AboutDialog(this);
+		dlg.setModal(true);
+		dlg.setVisible(true);
 	}
 }
