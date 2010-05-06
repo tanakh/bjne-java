@@ -7,18 +7,18 @@ public class Rom {
 	public Rom(Nes n) {
 	}
 
-	void reset() {
+	public void reset() {
 
 	}
 
-	void release() {
+	public void release() {
 		romDat = null;
 		chrDat = null;
 		sram = null;
 		vram = null;
 	}
 
-	void load(String fname) throws IOException {
+	public void load(String fname) throws IOException {
 		release();
 
 		FileInputStream is = new FileInputStream(fname);
@@ -59,51 +59,51 @@ public class Rom {
 		System.out.printf("four screen : %s\n", fourScreen ? "Y" : "N");
 	}
 
-	void saveSram(String fname) {
+	public void saveSram(String fname) {
 		// TODO
 	}
 
-	void loadSram(String fname) {
+	public void loadSram(String fname) {
 		// TODO
 	}
 
-	byte[] getRom() {
+	public byte[] getRom() {
 		return romDat;
 	}
 
-	byte[] getChr() {
+	public byte[] getChr() {
 		return chrDat;
 	}
 
-	byte[] getSram() {
+	public byte[] getSram() {
 		return sram;
 	}
 
-	byte[] getVram() {
+	public byte[] getVram() {
 		return vram;
 	}
 
-	int romSize() {
+	public int romSize() {
 		return prgPageCnt;
 	}
 
-	int chrSize() {
+	public int chrSize() {
 		return chrPageCnt;
 	}
 
-	int mapperNo() {
+	public int mapperNo() {
 		return mapper;
 	}
 
-	boolean hasSram() {
+	public boolean hasSram() {
 		return sramEnable;
 	}
 
-	boolean hasTrainer() {
+	public boolean hasTrainer() {
 		return trainerEnable;
 	}
 
-	boolean isFourScreen() {
+	public boolean isFourScreen() {
 		return fourScreen;
 	}
 
@@ -111,14 +111,14 @@ public class Rom {
 		HORIZONTAL, VERTICAL,
 	}
 
-	MirrorType mirror() {
+	public MirrorType mirror() {
 		return mirroring;
 	}
 
 	private int prgPageCnt, chrPageCnt;
 	private MirrorType mirroring;
-	boolean sramEnable, trainerEnable;
-	boolean fourScreen;
-	int mapper;
+	private boolean sramEnable, trainerEnable;
+	private boolean fourScreen;
+	private int mapper;
 	private byte[] romDat, chrDat, sram, vram;
 }
