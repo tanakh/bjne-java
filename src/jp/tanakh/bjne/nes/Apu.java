@@ -122,7 +122,7 @@ public class Apu {
 						pause = true;
 				}
 
-				// エンベロープ
+				// envelope
 				int vol = 16;
 				if (j != TRI) {
 					if (cc.envelopeEnable) {
@@ -133,7 +133,7 @@ public class Apu {
 							if (cc.volume > 0)
 								cc.volume--;
 							else {
-								if (!cc.lengthEnable) // ループ
+								if (!cc.lengthEnable) // loop
 									cc.volume = 0xf;
 								else
 									cc.volume = 0;
@@ -143,7 +143,7 @@ public class Apu {
 					vol = cc.volume;
 				}
 
-				// スウィープ
+				// sweep
 				if ((j == SQ1 || j == SQ2) && cc.sweepEnable && !cc.sweepPausing) {
 					double sweep_clk = cpuClock / (120.0 / (cc.sweepRate + 1));
 					cc.sweepClk += incClk;
@@ -154,7 +154,7 @@ public class Apu {
 								cc.waveLength += cc.waveLength >> cc.sweepShift;
 							else
 								// decrease
-								cc.waveLength += ~(cc.waveLength >> cc.sweepShift); // 1の補数
+								cc.waveLength += ~(cc.waveLength >> cc.sweepShift);
 							if (cc.waveLength < 0x008)
 								cc.sweepPausing = true;
 							if ((cc.waveLength & ~0x7FF) != 0)
@@ -169,7 +169,7 @@ public class Apu {
 				if (pause)
 					continue;
 
-				// 波形生成
+				// generate wave
 				double t = ((j == SQ1 || j == SQ2) ? sqProduce(cc, sampleClk) : (j == TRI) ? triProduce(cc, sampleClk) : (j == NOI) ? noiProduce(cc, sampleClk)
 						: 0);
 
