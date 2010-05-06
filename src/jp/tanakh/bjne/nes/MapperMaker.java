@@ -1,6 +1,7 @@
-package jp.tanakh.bjne;
+package jp.tanakh.bjne.nes;
 
-import jp.tanakh.bjne.mapper.NullMapper;
+import jp.tanakh.bjne.nes.mapper.NullMapper;
+
 
 public class MapperMaker {
 	static Mapper makeMapper(int num, Nes n) {

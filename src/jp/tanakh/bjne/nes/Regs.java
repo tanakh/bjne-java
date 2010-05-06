@@ -1,4 +1,4 @@
-package jp.tanakh.bjne;
+package jp.tanakh.bjne.nes;
 
 public class Regs {
 	public Regs(Nes n) {

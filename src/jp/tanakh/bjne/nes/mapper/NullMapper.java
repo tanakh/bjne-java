@@ -1,7 +1,7 @@
-package jp.tanakh.bjne.mapper;
+package jp.tanakh.bjne.nes.mapper;
 
-import jp.tanakh.bjne.Mapper;
-import jp.tanakh.bjne.Renderer.SoundInfo;
+import jp.tanakh.bjne.nes.Mapper;
+import jp.tanakh.bjne.nes.Renderer.SoundInfo;
 
 public class NullMapper implements Mapper {
 	static int mapperNo(){

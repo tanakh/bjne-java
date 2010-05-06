@@ -1,4 +1,4 @@
-package jp.tanakh.bjne;
+package jp.tanakh.bjne.nes;
 
 public class Cpu {
 	public Cpu(Nes n) {

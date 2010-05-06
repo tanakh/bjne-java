@@ -1,6 +1,6 @@
-package jp.tanakh.bjne;
+package jp.tanakh.bjne.nes;
 
-import jp.tanakh.bjne.Renderer.SoundInfo;
+import jp.tanakh.bjne.nes.Renderer.SoundInfo;
 
 public interface Mapper {
 	void write(short adr, byte dat);

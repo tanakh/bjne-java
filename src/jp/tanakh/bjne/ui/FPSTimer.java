@@ -1,4 +1,4 @@
-package jp.tanakh.bjne;
+package jp.tanakh.bjne.ui;
 
 import java.util.Date;
 

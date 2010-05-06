@@ -1,4 +1,4 @@
-package jp.tanakh.bjne;
+package jp.tanakh.bjne.nes;
 
 import java.io.FileInputStream;
 import java.io.IOException;

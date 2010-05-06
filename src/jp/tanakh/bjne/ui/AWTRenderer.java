@@ -1,4 +1,4 @@
-package jp.tanakh.bjne;
+package jp.tanakh.bjne.ui;
 
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -6,6 +6,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+
+import jp.tanakh.bjne.nes.Renderer;
 
 public class AWTRenderer implements Renderer {
 	private static final int SCREEN_WIDTH = 256;
