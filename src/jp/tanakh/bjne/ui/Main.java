@@ -11,6 +11,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 
+import javax.sound.sampled.LineUnavailableException;
+
 import jp.tanakh.bjne.nes.Nes;
 import jp.tanakh.bjne.nes.Renderer;
 
@@ -106,7 +108,13 @@ public class Main extends Frame {
 	}
 
 	private void initializeNes() {
-		r = new AWTRenderer(this);
+		try {
+			r = new AWTRenderer(this);
+		} catch (LineUnavailableException e) {
+			System.out.println("Cannot initialize Renderer.");
+			e.printStackTrace();
+			System.exit(0);
+		}
 	}
 
 	private void openRom(String file) {

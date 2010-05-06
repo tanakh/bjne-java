@@ -17,6 +17,8 @@ public class Nes {
 	public void load(String fname) throws IOException {
 		rom.load(fname);
 		reset();
+		if (mapper == null)
+			throw new IOException(String.format("unsupported mapper: #%d\n", rom.mapperNo()));
 	}
 
 	public boolean checkMapper() {
@@ -67,8 +69,7 @@ public class Nes {
 		Renderer.InputInfo inpi = renderer.requestInput(2, 8);
 
 		if (sndi != null) {
-			// TODO
-			// apu.genAudio(sndi);
+			apu.genAudio(sndi);
 			renderer.outputSound(sndi);
 		}
 		if (inpi != null)
@@ -83,8 +84,7 @@ public class Nes {
 			if (scri != null)
 				ppu.render(i, scri);
 			ppu.spriteCheck(i);
-			// TODO
-			// apu.sync();
+			apu.sync();
 			cpu.exec(114);
 			regs.endScanline();
 		}
@@ -95,8 +95,7 @@ public class Nes {
 		for (int i = 240; i < 262; i++) {
 			if (mapper != null)
 				mapper.hblank(i);
-			// TODO
-			// apu.sync();
+			apu.sync();
 			if (i == 241) {
 				regs.setVBlank(true, false);
 				cpu.exec(0); // one extra op will execute after VBLANK
