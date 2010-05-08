@@ -9,10 +9,17 @@ import jp.tanakh.bjne.nes.Renderer.SoundInfo;
  * Mapper 4: MMC3
  */
 public class MMC3 implements Mapper {
-
 	public MMC3(Nes n) {
 		nes = n;
+	}
 
+	@Override
+	public int mapperNo() {
+		return 4;
+	}
+
+	@Override
+	public void reset() {
 		romSize = nes.getRom().romSize();
 		prgPage[0] = 0;
 		prgPage[1] = 1;

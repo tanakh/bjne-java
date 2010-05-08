@@ -16,9 +16,10 @@ public class Nes {
 
 	public void load(String fname) throws IOException {
 		rom.load(fname);
-		reset();
+		mapper = MapperMaker.makeMapper(rom.mapperNo(), this);
 		if (mapper == null)
-			throw new IOException(String.format("unsupported mapper: #%d\n", rom.mapperNo()));
+			throw new IOException(String.format("unsupported mapper: #%d", rom.mapperNo()));
+		reset();
 	}
 
 	public boolean checkMapper() {
@@ -46,8 +47,8 @@ public class Nes {
 		rom.reset();
 		mbc.reset();
 
-		// make mapper
-		mapper = MapperMaker.makeMapper(rom.mapperNo(), this);
+		// reset mapper
+		mapper.reset();
 
 		// reset rest
 		cpu.reset();

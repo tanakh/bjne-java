@@ -93,7 +93,8 @@ public class Main extends Frame {
 
 		setVisible(true);
 		setVisible(false);
-		setSize(256 + getInsets().left + getInsets().right, 240 + getInsets().top + getInsets().bottom);
+		setSize(256 + getInsets().left + getInsets().right, 240
+				+ getInsets().top + getInsets().bottom);
 		setVisible(true);
 
 		loop();
@@ -129,8 +130,8 @@ public class Main extends Frame {
 				nes.reset();
 				// nes.getCpu().setLogging(true);
 			} catch (IOException e) {
-				System.out.println("error: loading " + file);
-				e.printStackTrace();
+				System.out.println("error: loading " + file + " ("
+						+ e.getMessage() + ")");
 				nes = null;
 			}
 		}
