@@ -179,7 +179,7 @@ public class Main extends Frame {
 			setLayout(new FlowLayout());
 
 			add(new Label("Beautiful Japanese Nes Emulator for Java"));
-			add(new Label("Version 0.1.0"));
+			add(new Label("Version 0.2.0"));
 
 			Button b = new Button("OK");
 			b.addActionListener(new ActionListener() {
