@@ -25,7 +25,7 @@ public class Main extends Frame {
 	private static final long serialVersionUID = 1L;
 
 	private Nes nes = null;
-	private Renderer r = null;
+	private AWTRenderer r = null;
 	private FPSTimer timer = new FPSTimer();
 
 	private Object nesLock = new Object();
@@ -101,12 +101,36 @@ public class Main extends Frame {
 	}
 
 	private void loop() {
+		final int FPS = 60;
+
 		for (;;) {
 			synchronized (nesLock) {
-				if (nes != null) {
-					nes.execFrame();
-					timer.elapse(60);
+				if (nes == null)
+					continue;
+
+				long start = System.nanoTime();
+				nes.execFrame();
+
+				for (;;) {
+					int bufStat = r.getSoundBufferState();
+					if (bufStat < 0)
+						break;
+					if (bufStat == 0) {
+						long elapsed = System.nanoTime() - start;
+						long wait = (long) (1.0 / FPS - elapsed / 1e-9);
+						try {
+							if (wait > 0)
+								Thread.sleep(wait);
+						} catch (InterruptedException e) {
+						}
+						break;
+					}
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+					}
 				}
+				// timer.elapse(60);
 			}
 		}
 	}
@@ -128,7 +152,6 @@ public class Main extends Frame {
 				nes = new Nes(r);
 				nes.load(file);
 				nes.reset();
-				// nes.getCpu().setLogging(true);
 			} catch (IOException e) {
 				System.out.println("error: loading " + file + " ("
 						+ e.getMessage() + ")");

@@ -22,14 +22,18 @@ public class AWTRenderer implements Renderer {
 	private static final int SAMPLE_RATE = 48000;
 	private static final int BPS = 16;
 	private static final int CHANNELS = 2;
-	private static final int BUFFER_MILLS = 50;
+	private static final int BUFFER_FRAMES = 2;
+
+	private static final int FPS = 60;
+	private static final int SAMPLES_PER_FRAME = SAMPLE_RATE / FPS;
 
 	private ScreenInfo scri = new ScreenInfo();
 	private SoundInfo sndi = new SoundInfo();
 	private InputInfo inpi = new InputInfo();
 
 	private Frame frame;
-	private BufferedImage image = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
+	private BufferedImage image = new BufferedImage(SCREEN_WIDTH,
+			SCREEN_HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
 
 	private SourceDataLine line;
 	private int lineBufferSize;
@@ -48,14 +52,15 @@ public class AWTRenderer implements Renderer {
 			}
 		});
 
-		AudioFormat format = new AudioFormat(SAMPLE_RATE, BPS, CHANNELS, true, false);
+		AudioFormat format = new AudioFormat(SAMPLE_RATE, BPS, CHANNELS, true,
+				false);
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
 		line = (SourceDataLine) AudioSystem.getLine(info);
 		line.open();
 		line.start();
 		lineBufferSize = line.available();
 
-		int bufSamples = Math.min(lineBufferSize / 2, SAMPLE_RATE * BUFFER_MILLS / 1000);
+		int bufSamples = SAMPLES_PER_FRAME;
 
 		sndi.bps = 16;
 		sndi.buf = new byte[bufSamples * (BPS / 8) * CHANNELS];
@@ -85,7 +90,8 @@ public class AWTRenderer implements Renderer {
 
 	@Override
 	public void outputScreen(ScreenInfo info) {
-		byte[] bgr = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+		byte[] bgr = ((DataBufferByte) image.getRaster().getDataBuffer())
+				.getData();
 
 		for (int i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++) {
 			bgr[i * 3] = info.buf[i * 3 + 2];
@@ -96,12 +102,13 @@ public class AWTRenderer implements Renderer {
 		int left = frame.getInsets().left;
 		int top = frame.getInsets().top;
 		Graphics g = frame.getGraphics();
-		g.drawImage(image, left, top, left + SCREEN_WIDTH, top + SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, frame);
+		g.drawImage(image, left, top, left + SCREEN_WIDTH, top + SCREEN_HEIGHT,
+				0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, frame);
 	}
 
 	@Override
 	public SoundInfo requestSound() {
-		if (line.available() >= lineBufferSize - sndi.sample * (BPS / 8) * CHANNELS)
+		if (getSoundBufferState() <= 0)
 			return sndi;
 		else
 			return null;
@@ -112,9 +119,23 @@ public class AWTRenderer implements Renderer {
 		line.write(info.buf, 0, info.sample * (info.bps / 8) * info.ch);
 	}
 
+	public int getSoundBufferState() {
+		int rest = (lineBufferSize - line.available()) / (sndi.bps / 8)
+				/ sndi.ch;
+		if (rest < SAMPLES_PER_FRAME * BUFFER_FRAMES)
+			return -1;
+		if (rest == SAMPLES_PER_FRAME * BUFFER_FRAMES)
+			return 0;
+		return 1;
+	}
+
 	static final int[][] keyDef = {
-			{ KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_SHIFT, KeyEvent.VK_ENTER, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, },
-			{ KeyEvent.VK_V, KeyEvent.VK_B, KeyEvent.VK_N, KeyEvent.VK_M, KeyEvent.VK_O, KeyEvent.VK_COMMA, KeyEvent.VK_K, KeyEvent.VK_L, } };
+			{ KeyEvent.VK_Z, KeyEvent.VK_X, KeyEvent.VK_SHIFT,
+					KeyEvent.VK_ENTER, KeyEvent.VK_UP, KeyEvent.VK_DOWN,
+					KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, },
+			{ KeyEvent.VK_V, KeyEvent.VK_B, KeyEvent.VK_N, KeyEvent.VK_M,
+					KeyEvent.VK_O, KeyEvent.VK_COMMA, KeyEvent.VK_K,
+					KeyEvent.VK_L, } };
 
 	private void onKey(int keyCode, boolean press) {
 		for (int i = 0; i < 2; i++)
