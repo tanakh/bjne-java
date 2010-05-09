@@ -193,14 +193,14 @@ public class Regs {
 			colorDisplay = _bit(dat, 0);
 			break;
 		case 2: // PPU Status Register (R)
-			// Ç«Ç§Ç∑ÇÈÇ©Åc
+			// what should I do...?
 			System.out.println("*** write to $2002");
 			break;
 		case 3: // SPR-RAM Address Register (W)
 			sprramAdr = dat;
 			break;
 		case 4: // SPR-RAM I/O Register (W)
-			nes.getPpu().getSpriteRam()[sprramAdr++] = dat;
+			nes.getPpu().getSpriteRam()[(sprramAdr++) & 0xff] = dat;
 			break;
 		case 5: // VRAM Address Register #1 (W2)
 			ppuAdrToggle = !ppuAdrToggle;

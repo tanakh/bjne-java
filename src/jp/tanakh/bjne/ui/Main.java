@@ -151,7 +151,6 @@ public class Main extends Frame {
 			try {
 				nes = new Nes(r);
 				nes.load(file);
-				nes.reset();
 			} catch (IOException e) {
 				System.out.println("error: loading " + file + " ("
 						+ e.getMessage() + ")");
