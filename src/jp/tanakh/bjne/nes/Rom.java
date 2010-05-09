@@ -31,7 +31,8 @@ public class Rom {
 		prgPageCnt = dat[4] & 0xff;
 		chrPageCnt = dat[5] & 0xff;
 
-		mirroring = (dat[6] & 1) != 0 ? MirrorType.VERTICAL : MirrorType.HORIZONTAL;
+		mirroring = (dat[6] & 1) != 0 ? MirrorType.VERTICAL
+				: MirrorType.HORIZONTAL;
 		sramEnable = (dat[6] & 2) != 0;
 		trainerEnable = (dat[6] & 4) != 0;
 		fourScreen = (dat[6] & 8) != 0;
@@ -47,13 +48,19 @@ public class Rom {
 		sram = new byte[0x2000];
 		vram = new byte[0x2000];
 
-		System.arraycopy(dat, 16, romDat, 0, romSize);
-		System.arraycopy(dat, 16 + romSize, chrDat, 0, chrSize);
+		System.out.printf("%d %d %d\n", dat.length, romSize, chrSize);
+
+		if (romSize > 0)
+			System.arraycopy(dat, 16, romDat, 0, romSize);
+		if (chrSize > 0)
+			System.arraycopy(dat, 16 + romSize, chrDat, 0, chrSize);
 
 		System.out.printf("Cartridge information:\n");
-		System.out.printf("%d KB rom, %d KB vrom\n", romSize / 1024, chrSize / 1024);
+		System.out.printf("%d KB rom, %d KB vrom\n", romSize / 1024,
+				chrSize / 1024);
 		System.out.printf("mapper #%d\n", mapper);
-		System.out.printf("%s mirroring\n", mirroring == MirrorType.VERTICAL ? "vertical" : "holizontal");
+		System.out.printf("%s mirroring\n",
+				mirroring == MirrorType.VERTICAL ? "vertical" : "holizontal");
 		System.out.printf("sram        : %s\n", sramEnable ? "Y" : "N");
 		System.out.printf("trainer     : %s\n", trainerEnable ? "Y" : "N");
 		System.out.printf("four screen : %s\n", fourScreen ? "Y" : "N");

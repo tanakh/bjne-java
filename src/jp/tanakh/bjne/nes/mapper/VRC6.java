@@ -35,15 +35,15 @@ public class VRC6 implements Mapper {
 		sq[0] = new SqState();
 		sq[1] = new SqState();
 		saw = new SawState();
-		
-		writeQueue=new LinkedList<WriteDat>();
+
+		writeQueue = new LinkedList<WriteDat>();
 	}
 
 	@Override
 	public void write(short sadr, byte sdat) {
 		int adr = sadr & 0xffff;
 		int dat = sdat & 0xff;
-		
+
 		switch (adr & 0xF003) {
 		case 0x8000: // Select 16K ROM bank at $8000
 			nes.getMbc().mapRom(0, dat * 2);
@@ -119,9 +119,9 @@ public class VRC6 implements Mapper {
 		case 0xB000:
 		case 0xB001:
 		case 0xB002:
-			writeQueue
-					.add(new WriteDat(nes.getCpu().getMasterClock(), sadr, sdat));
-			while (writeQueue.size() > 100) {
+			writeQueue.add(new WriteDat(nes.getCpu().getMasterClock(), sadr,
+					sdat));
+			while (writeQueue.size() > 1000) {
 				WriteDat wd = writeQueue.remove();
 				sndWrite(wd.adr, wd.dat);
 			}
@@ -182,7 +182,8 @@ public class VRC6 implements Mapper {
 		int span = info.bps / 8 * info.ch;
 
 		for (int i = 0; i < info.sample; i++) {
-			long cur = (curClk - befClk) * i / info.sample + befClk;
+			// long cur = (curClk - befClk) * i / info.sample + befClk;
+			long cur = (long) (befClk + sampleClk * i);
 			while (!writeQueue.isEmpty() && cur >= writeQueue.peek().clk) {
 				WriteDat wd = writeQueue.remove();
 				sndWrite(wd.adr, wd.dat);

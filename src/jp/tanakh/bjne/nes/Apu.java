@@ -54,7 +54,6 @@ public class Apu {
 
 	public void genAudio(SoundInfo info) {
 		double cpuClock = nes.getCpu().getFrequency();
-		double framerate = (cpuClock * 2 / 14915);
 
 		long curClock = nes.getCpu().getMasterClock();
 		int sample = info.sample;
@@ -63,10 +62,6 @@ public class Apu {
 		int span = info.ch * (info.bps / 8);
 
 		double incClk = ((double) (curClock - befClock)) / sample; // executed
-		// CPU
-		// clocks
-		// per
-		// sample
 		double sampleClk = cpuClock / info.freq; // CPU clocks per sample
 
 		Arrays.fill(buf, (byte) 0x00);
@@ -75,7 +70,8 @@ public class Apu {
 			nes.getMapper().audio(info);
 
 		for (int i = 0; i < sample; i++) {
-			long pos = (curClock - befClock) * i / sample + befClock;
+			//long pos = (curClock - befClock) * i / sample + befClock;
+			long pos = (long) (befClock + sampleClk * i);
 			while (!writeQueue.isEmpty() && writeQueue.peek().clk <= pos) {
 				WriteDat wd = writeQueue.remove();
 				doWrite(ch, dmc, wd.adr, wd.dat);
