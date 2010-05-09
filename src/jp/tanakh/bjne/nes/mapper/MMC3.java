@@ -1,14 +1,13 @@
 package jp.tanakh.bjne.nes.mapper;
 
-import jp.tanakh.bjne.nes.Mapper;
+import jp.tanakh.bjne.nes.MapperAdapter;
 import jp.tanakh.bjne.nes.Nes;
 import jp.tanakh.bjne.nes.Ppu;
-import jp.tanakh.bjne.nes.Renderer.SoundInfo;
 
 /**
  * Mapper 4: MMC3
  */
-public class MMC3 implements Mapper {
+public class MMC3 extends MapperAdapter {
 	public MMC3(Nes n) {
 		nes = n;
 	}
@@ -150,10 +149,6 @@ public class MMC3 implements Mapper {
 	private void setVrom() {
 		for (int i = 0; i < 8; i++)
 			nes.getMbc().mapVrom((i + (chrSwap ? 4 : 0)) % 8, chrPage[i]);
-	}
-
-	@Override
-	public void audio(SoundInfo info) {
 	}
 
 	private int romSize;

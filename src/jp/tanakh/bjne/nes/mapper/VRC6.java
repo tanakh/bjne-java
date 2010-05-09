@@ -3,12 +3,12 @@ package jp.tanakh.bjne.nes.mapper;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import jp.tanakh.bjne.nes.Mapper;
+import jp.tanakh.bjne.nes.MapperAdapter;
 import jp.tanakh.bjne.nes.Nes;
 import jp.tanakh.bjne.nes.Ppu;
 import jp.tanakh.bjne.nes.Renderer.SoundInfo;
 
-public class VRC6 implements Mapper {
+public class VRC6 extends MapperAdapter {
 	public VRC6(Nes n) {
 		nes = n;
 	}

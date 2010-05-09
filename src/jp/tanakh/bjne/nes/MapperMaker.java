@@ -15,15 +15,9 @@ public class MapperMaker {
 				return null;
 
 			for (Class<?> c : classes) {
-				boolean isMapper = false;
-				for (Class<?> i : c.getInterfaces()) {
-					if (i.getName() == "jp.tanakh.bjne.nes.Mapper")
-						isMapper = true;
-				}
-				if (!isMapper)
-					continue;
-
 				Class<Mapper> mc = (Class<Mapper>) c;
+				if (mc == null)
+					continue;
 				Constructor<Mapper> ctor = mc.getConstructor(Nes.class);
 				Mapper ret = ctor.newInstance(n);
 				if (ret.mapperNo() == num)
