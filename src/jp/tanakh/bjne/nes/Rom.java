@@ -48,8 +48,6 @@ public class Rom {
 		sram = new byte[0x2000];
 		vram = new byte[0x2000];
 
-		System.out.printf("%d %d %d\n", dat.length, romSize, chrSize);
-
 		if (romSize > 0)
 			System.arraycopy(dat, 16, romDat, 0, romSize);
 		if (chrSize > 0)

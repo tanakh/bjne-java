@@ -1,9 +1,14 @@
 package jp.tanakh.bjne.nes;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class MapperMaker {
 	@SuppressWarnings("unchecked")
@@ -15,13 +20,14 @@ public class MapperMaker {
 				return null;
 
 			for (Class<?> c : classes) {
-				Class<Mapper> mc = (Class<Mapper>) c;
-				if (mc == null)
-					continue;
-				Constructor<Mapper> ctor = mc.getConstructor(Nes.class);
-				Mapper ret = ctor.newInstance(n);
-				if (ret.mapperNo() == num)
-					return ret;
+				try {
+					Class<Mapper> mc = (Class<Mapper>) c;
+					Constructor<Mapper> ctor = mc.getConstructor(Nes.class);
+					Mapper ret = ctor.newInstance(n);
+					if (ret.mapperNo() == num)
+						return ret;
+				} catch (Exception e) {
+				}
 			}
 
 		} catch (Exception e) {
@@ -31,7 +37,7 @@ public class MapperMaker {
 	}
 
 	public static Class<?>[] getClasses(String pckgname)
-			throws ClassNotFoundException {
+			throws ClassNotFoundException, IOException {
 		ClassLoader cld = Thread.currentThread().getContextClassLoader();
 		if (cld == null)
 			return null;
@@ -39,16 +45,33 @@ public class MapperMaker {
 		URL resource = cld.getResource(path);
 		if (resource == null)
 			return null;
-		File directory = new File(resource.getFile());
-		if (!directory.exists())
-			return null;
 
-		String[] files = directory.list();
 		ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
-		for (int i = 0; i < files.length; i++)
-			if (files[i].endsWith(".class"))
-				classes.add(Class.forName(pckgname + '.'
-						+ files[i].substring(0, files[i].length() - 6)));
+
+		if (resource.getProtocol() == "jar") {
+			JarURLConnection conn = (JarURLConnection) resource
+					.openConnection();
+			JarFile jar = conn.getJarFile();
+			for (Enumeration<JarEntry> en = jar.entries(); en.hasMoreElements();) {
+				JarEntry entry = en.nextElement();
+				String entryName = entry.getName();
+				if (!entryName.matches(path + "/.*.class"))
+					continue;
+				String className = entryName.replaceAll("/", ".").replace(
+						".class", "");
+				classes.add(Class.forName(className));
+			}
+		} else {
+			File directory = new File(resource.getFile());
+			if (!directory.exists())
+				return null;
+
+			String[] files = directory.list();
+			for (int i = 0; i < files.length; i++)
+				if (files[i].endsWith(".class"))
+					classes.add(Class.forName(pckgname + '.'
+							+ files[i].replace(".class", "")));
+		}
 
 		Class<?>[] ret = new Class<?>[classes.size()];
 		classes.toArray(ret);

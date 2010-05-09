@@ -18,7 +18,6 @@ import java.io.IOException;
 import javax.sound.sampled.LineUnavailableException;
 
 import jp.tanakh.bjne.nes.Nes;
-import jp.tanakh.bjne.nes.Renderer;
 
 public class Main extends Frame {
 
